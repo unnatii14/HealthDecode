@@ -24,6 +24,8 @@ class Settings(BaseSettings):
         "http://127.0.0.1:5174",
         "http://127.0.0.1:5175",
         "http://localhost:3000",  # Alternative port
+        "http://localhost:4173",  # Vite preview (production build)
+        "http://127.0.0.1:4173",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:3000",
     ]
@@ -45,6 +47,18 @@ class Settings(BaseSettings):
     USE_LOCAL_MODEL: bool = True
     MAX_SUMMARY_LENGTH: int = 150
     MIN_SUMMARY_LENGTH: int = 50
+
+    # LLM (Groq) settings — powers structured extraction + grounded explanations.
+    # Free, OpenAI-compatible API. Set GROQ_API_KEY in the environment / .env.
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "llama-3.3-70b-versatile"
+    GROQ_BASE_URL: str = "https://api.groq.com/openai/v1"
+    USE_AI_EXTRACTION: bool = True          # LLM extraction (falls back to regex)
+    USE_AI_EXPLANATIONS: bool = True        # RAG-grounded explanations (falls back to KB)
+
+    # RAG embedding model (local, free) for retrieving grounding context.
+    EMBEDDING_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"
+    RAG_TOP_K: int = 3
     
     # Knowledge base settings
     KNOWLEDGE_BASE_PATH: str = "app/data/knowledge_base.yaml"
@@ -57,6 +71,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         case_sensitive = True
+        extra = "ignore"  # tolerate unrelated env vars (e.g. frontend's VITE_API_BASE_URL)
 
 
 settings = Settings()

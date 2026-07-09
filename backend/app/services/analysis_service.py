@@ -9,7 +9,10 @@ from fastapi import UploadFile, HTTPException
 from app.services.ocr_service import OCRService
 from app.services.nlp_service import NLPService
 from app.services.knowledge_service import KnowledgeBaseService
+from app.services.ai_service import AIService
+from app.services.rag_service import RagService
 from app.schemas import Biomarker, BiomarkerStatus, ReferenceRange
+from app.config import settings
 
 
 class ReportAnalysisService:
@@ -20,6 +23,8 @@ class ReportAnalysisService:
         self.ocr_service = OCRService()
         self.nlp_service = None  # Will be injected
         self.knowledge_service = KnowledgeBaseService()
+        self.ai_service = AIService()
+        self.rag_service = RagService()
     
     def set_nlp_service(self, nlp_service: NLPService):
         """Set NLP service (dependency injection)"""
@@ -69,34 +74,26 @@ class ReportAnalysisService:
         if not self.nlp_service:
             raise HTTPException(status_code=500, detail="NLP service not initialized")
         
-        raw_biomarkers = self.nlp_service.extract_biomarkers(extracted_text)
-        
-        # Step 3: Enrich biomarkers with knowledge base information
+        raw_biomarkers = self._extract_biomarkers(extracted_text)
+
+        # Step 3: Enrich each biomarker with status + a grounded explanation.
         biomarkers = []
         for raw_bio in raw_biomarkers:
             status = self.nlp_service.determine_status(
                 raw_bio['value'],
                 raw_bio['reference_range']
             )
-            
-            # Get explanation and implications from knowledge base
-            explanation = self.knowledge_service.get_explanation_for_biomarker(
-                raw_bio['name'],
-                status
-            )
-            implications = self.knowledge_service.get_implications_for_biomarker(
-                raw_bio['name'],
-                status
-            )
-            
+            explanation, implications = self._explain(raw_bio, status)
+            unit = raw_bio.get('unit') or raw_bio['reference_range'].get('unit', '')
+
             biomarker = Biomarker(
                 name=raw_bio['name'],
                 value=raw_bio['value'],
-                unit=raw_bio['unit'],
+                unit=unit,
                 reference_range=ReferenceRange(
                     min=raw_bio['reference_range']['min'],
                     max=raw_bio['reference_range']['max'],
-                    unit=raw_bio['unit']
+                    unit=unit
                 ),
                 status=BiomarkerStatus(status),
                 category=raw_bio['category'],
@@ -120,6 +117,44 @@ class ReportAnalysisService:
             'disclaimer': self.knowledge_service.get_disclaimer()
         }
     
+    def _extract_biomarkers(self, text: str) -> List[Dict]:
+        """LLM extraction (enriched with reference ranges); regex fallback."""
+        if settings.USE_AI_EXTRACTION and self.ai_service.available:
+            try:
+                enriched = []
+                for item in self.ai_service.extract_biomarkers(text):
+                    ref_info = self.nlp_service._find_reference_range(item["name"])
+                    if not ref_info:
+                        continue  # only keep biomarkers we have a reference range for
+                    enriched.append({
+                        "name": ref_info["name"],
+                        "value": item["value"],
+                        "unit": item.get("unit", "") or ref_info.get("unit", ""),
+                        "category": ref_info.get("category", "Other"),
+                        "reference_range": self.nlp_service._get_reference_range(ref_info),
+                    })
+                if enriched:
+                    return enriched
+            except Exception as exc:  # noqa: BLE001
+                print(f"⚠️  AI extraction failed ({exc}); falling back to regex")
+        return self.nlp_service.extract_biomarkers(text)
+
+    def _explain(self, raw_bio: Dict, status: str):
+        """RAG-grounded AI explanation; static knowledge-base fallback."""
+        if settings.USE_AI_EXPLANATIONS and self.ai_service.available:
+            try:
+                context = self.rag_service.retrieve(raw_bio["name"])
+                result = self.ai_service.explain_biomarker(
+                    raw_bio["name"], raw_bio["value"], raw_bio.get("unit", ""), status, context
+                )
+                if result.get("explanation"):
+                    return result["explanation"], result.get("implications", [])
+            except Exception as exc:  # noqa: BLE001
+                print(f"⚠️  AI explanation failed ({exc}); using knowledge base")
+        explanation = self.knowledge_service.get_explanation_for_biomarker(raw_bio["name"], status)
+        implications = self.knowledge_service.get_implications_for_biomarker(raw_bio["name"], status)
+        return explanation, implications
+
     def _generate_summary(self, biomarkers: List[Biomarker]) -> str:
         """Generate a summary of the analysis"""
         if not biomarkers:

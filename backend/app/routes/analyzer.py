@@ -5,7 +5,13 @@ Report Analyzer API routes
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 from typing import Optional
 
+from pydantic import BaseModel
+
 from app.schemas import ReportAnalysisResponse, ErrorResponse
+
+
+class TextAnalysisRequest(BaseModel):
+    text: str
 from app.services.analysis_service import ReportAnalysisService
 from app.services.nlp_service import NLPService
 
@@ -57,7 +63,7 @@ async def analyze_report(
 
 
 @router.post("/analyze-text", response_model=ReportAnalysisResponse)
-async def analyze_text(text: str):
+async def analyze_text(payload: TextAnalysisRequest):
     """
     Analyze medical report from text input
     
@@ -66,6 +72,7 @@ async def analyze_text(text: str):
     Returns analyzed biomarkers with educational information
     """
     try:
+        text = payload.text
         if not text or len(text.strip()) < 10:
             raise HTTPException(
                 status_code=400,

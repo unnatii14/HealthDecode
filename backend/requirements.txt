@@ -20,3 +20,8 @@ pyyaml==6.0.2
 # For Python 3.13 users: spaCy support coming soon
 # pip install spacy==3.7.6
 # python -m spacy download en_core_web_sm
+
+# --- AI upgrade: Groq LLM extraction + RAG-grounded explanations ---
+openai==1.54.4                 # Groq is OpenAI-compatible
+sentence-transformers==3.3.1   # local embeddings for RAG (optional; keyword fallback if absent)
+faiss-cpu==1.9.0               # vector index for RAG
