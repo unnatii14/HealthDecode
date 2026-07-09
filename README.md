@@ -7,10 +7,13 @@
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Online-success?style=for-the-badge&logo=vercel&logoColor=white)](https://health-decode.vercel.app/)
 
 **Empowering Health Literacy through AI — Decode medical lab reports instantly.**
 
-[🚀 Demo](#demo) • [⚙️ Setup](#setup) • [🏗️ Architecture](#architecture) • [✨ Features](#features) • [📖 Usage](#usage)
+### 🔗 Try it live: **[health-decode.vercel.app](https://health-decode.vercel.app/)**
+
+[🚀 **Live Demo**](https://health-decode.vercel.app/) • [⚙️ Setup](#setup) • [🏗️ Architecture](#architecture) • [✨ Features](#features) • [📖 Usage](#usage)
 
 </div>
 
