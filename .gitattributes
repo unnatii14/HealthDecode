@@ -1,0 +1,34 @@
+# Normalize line endings to avoid CRLF/LF warning noise.
+# Text files are stored with LF in the repo; Git handles checkout per-OS.
+* text=auto
+
+# Explicit text files
+*.ts    text
+*.tsx   text
+*.js    text
+*.jsx   text
+*.py    text
+*.json  text
+*.yaml  text
+*.yml   text
+*.md    text
+*.html  text
+*.css   text
+*.toml  text
+
+# Windows scripts keep CRLF
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+
+# Shell scripts keep LF
+*.sh    text eol=lf
+
+# Binary files (never diff / never convert)
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.pdf   binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
