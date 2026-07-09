@@ -5,21 +5,23 @@
   publish = "dist"
 
 [build.environment]
-  # Node version
-  NODE_VERSION = "18"
+  # Node version (Vite 6 + Tailwind v4 need a modern Node)
+  NODE_VERSION = "20"
 
-# Redirect all requests to index.html for client-side routing
+# SPA fallback: serve index.html for client-side routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
-# API proxy to backend (update with your backend URL after deployment)
-[[redirects]]
-  from = "/api/*"
-  to = "https://your-backend-url.com/api/:splat"
-  status = 200
-  force = true
+# NOTE: The frontend runs fully client-side (PDF parsing, OCR and biomarker
+# detection happen in the browser), so no backend is required for the live demo.
+# If you later deploy the FastAPI backend, add a proxy here, e.g.:
+# [[redirects]]
+#   from = "/api/*"
+#   to = "https://YOUR-BACKEND.onrender.com/api/:splat"
+#   status = 200
+#   force = true
 
 # Security headers
 [[headers]]
@@ -27,5 +29,4 @@
   [headers.values]
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
-    X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
