@@ -1,12 +1,37 @@
-import * as pdfjsLib from 'pdfjs-dist';
-import { createWorker } from 'tesseract.js';
 import { analyzeText as analyzeTextBackend } from './api';
 
-// Configure PDF.js worker - use the bundled version
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
-  import.meta.url
-).toString();
+// ─── Lazy library loading ─────────────────────────────────────────────────────
+// pdfjs-dist and tesseract.js are heavy and require modern browser APIs.
+// We load them on-demand (only when a file is actually processed) instead of at
+// import time. This keeps them out of the initial bundle so the app paints
+// instantly, and — critically — ensures a load error in these libraries can
+// never blank the whole page.
+
+type PdfjsLib = typeof import('pdfjs-dist');
+let _pdfjs: Promise<PdfjsLib> | null = null;
+
+async function getPdfjs(): Promise<PdfjsLib> {
+  if (!_pdfjs) {
+    _pdfjs = (async () => {
+      const lib = await import('pdfjs-dist');
+      // Load the worker as a bundled URL asset (Vite-recommended pattern).
+      const workerUrl = (await import('pdfjs-dist/build/pdf.worker.min.mjs?url')).default;
+      lib.GlobalWorkerOptions.workerSrc = workerUrl;
+      return lib;
+    })();
+  }
+  return _pdfjs;
+}
+
+type CreateWorker = typeof import('tesseract.js')['createWorker'];
+let _createWorker: CreateWorker | null = null;
+
+async function getCreateWorker(): Promise<CreateWorker> {
+  if (!_createWorker) {
+    _createWorker = (await import('tesseract.js')).createWorker;
+  }
+  return _createWorker;
+}
 
 export interface Biomarker {
   name: string;
@@ -30,6 +55,7 @@ export interface AnalysisResult {
 
 // Extract text from PDF using PDF.js
 async function extractTextFromPDF(file: File): Promise<string> {
+  const pdfjsLib = await getPdfjs();
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   let fullText = '';
@@ -63,6 +89,7 @@ async function renderPDFPageToDataURL(
   file: File,
   pageNum: number
 ): Promise<string> {
+  const pdfjsLib = await getPdfjs();
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   const page = await pdf.getPage(pageNum);
@@ -75,7 +102,7 @@ async function renderPDFPageToDataURL(
   canvas.height = viewport.height;
   const ctx = canvas.getContext('2d')!;
 
-  await page.render({ canvasContext: ctx, viewport }).promise;
+  await page.render({ canvas, canvasContext: ctx, viewport }).promise;
   return canvas.toDataURL('image/png');
 }
 
@@ -84,6 +111,7 @@ async function ocrImage(
   source: File | string,
   onProgress?: (p: number) => void
 ): Promise<string> {
+  const createWorker = await getCreateWorker();
   const worker = await createWorker('eng', undefined, {
     logger: (m: any) => {
       if (m.status === 'recognizing text' && onProgress) {
@@ -120,6 +148,7 @@ async function smartExtractFromPDF(
 
   // Otherwise OCR each page
   console.log('[PDF] Text extraction poor, falling back to OCR...');
+  const pdfjsLib = await getPdfjs();
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   const pageTexts: string[] = [];
@@ -822,7 +851,7 @@ const KNOWN_MARKER_KEYWORDS = [
 function genericExtract(text: string): { label: string; value: number }[] {
   const results: { label: string; value: number }[] = [];
   // Each line: optional label text, then a number
-  const linePattern = /^(.{3,40?})\s+(\d{1,4}\.?\d{0,3})\s*(?:[a-zA-Zμ%\/\.]{1,15})?$/gm;
+  const linePattern = /^(.{3,40})\s+(\d{1,4}\.?\d{0,3})\s*(?:[a-zA-Zμ%\/\.]{1,15})?$/gm;
   let match;
   while ((match = linePattern.exec(text)) !== null) {
     const label = match[1].trim().toLowerCase();
