@@ -1,0 +1,22 @@
+# FastAPI and server
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+python-multipart==0.0.17
+pydantic==2.10.3
+pydantic-settings==2.6.1
+
+# OCR and Image Processing
+pytesseract==0.3.13
+Pillow==10.4.0
+pymupdf==1.26.7
+
+# Basic text processing (works without C++ compiler)
+regex==2024.11.6
+
+# Data handling
+pyyaml==6.0.2
+
+# Optional: Install spaCy separately if using Python 3.8-3.12
+# For Python 3.13 users: spaCy support coming soon
+# pip install spacy==3.7.6
+# python -m spacy download en_core_web_sm

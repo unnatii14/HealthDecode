@@ -1,0 +1,229 @@
+# Verified Medical Knowledge Base
+# Sources: WHO, ICMR, NHS, Mayo Clinic
+# Last Updated: 2026-01-12
+
+nutrients:
+  - id: vitamin-d
+    name: "Vitamin D (25-OH)"
+    category: vitamin
+    description: >
+      The "sunshine vitamin" essential for bone health, immune function, and calcium absorption. 
+      Produced when skin is exposed to sunlight. Critical for maintaining healthy bones and teeth.
+    benefits:
+      - Promotes calcium absorption for strong bones and teeth
+      - Supports immune system function and reduces infection risk
+      - Helps regulate mood and may reduce depression symptoms
+      - May reduce risk of certain chronic diseases
+      - Supports cardiovascular health
+      - Important for muscle function
+    deficiency_symptoms:
+      - Fatigue and tiredness
+      - Bone pain and muscle weakness
+      - Mood changes or depression
+      - Impaired wound healing
+      - Hair loss
+      - Increased susceptibility to infections
+      - Bone loss and increased fracture risk
+    sources:
+      - Sunlight exposure (10-30 minutes, 2-3 times per week)
+      - Fatty fish (salmon, mackerel, sardines, tuna)
+      - Egg yolks
+      - Fortified dairy products (milk, yogurt)
+      - Fortified cereals and orange juice
+      - Mushrooms exposed to UV light
+      - Cod liver oil
+    reference_range: "30-100 ng/mL"
+    optimal_range: "40-60 ng/mL"
+    daily_requirement: "600-800 IU (15-20 mcg) for adults"
+    sources_verified:
+      - "WHO Guidelines on Vitamin D"
+      - "ICMR Nutrient Requirements 2020"
+      - "NHS Vitamin D Guidelines"
+
+  - id: vitamin-b12
+    name: "Vitamin B12 (Cobalamin)"
+    category: vitamin
+    description: >
+      Essential water-soluble vitamin crucial for nerve tissue health, brain function, 
+      and production of red blood cells. Naturally found in animal products.
+    benefits:
+      - Supports nerve cell health and myelin formation
+      - Helps produce DNA and red blood cells
+      - Boosts energy levels and reduces fatigue
+      - Improves mood and may reduce depression symptoms
+      - Supports bone health and may prevent osteoporosis
+      - Promotes healthy pregnancy and fetal development
+      - Supports cardiovascular health
+    deficiency_symptoms:
+      - Extreme fatigue and weakness
+      - Pale or jaundiced skin
+      - Tingling sensation in hands and feet (neuropathy)
+      - Difficulty walking and balance problems
+      - Cognitive difficulties or memory loss
+      - Mouth ulcers or glossitis (inflamed tongue)
+      - Vision problems
+      - Anemia symptoms (shortness of breath, dizziness)
+    sources:
+      - Meat (beef, liver, chicken, pork)
+      - Fish and shellfish (salmon, trout, clams)
+      - Dairy products (milk, cheese, yogurt)
+      - Eggs
+      - Fortified cereals and plant-based milk
+      - Nutritional yeast
+    reference_range: "200-900 pg/mL"
+    optimal_range: "400-700 pg/mL"
+    daily_requirement: "2.4 mcg for adults"
+    sources_verified:
+      - "WHO Micronutrient Guidelines"
+      - "ICMR Guidelines 2020"
+      - "NHS B12 Information"
+
+  - id: iron
+    name: "Iron (Serum Iron)"
+    category: mineral
+    description: >
+      Essential mineral crucial for hemoglobin production, oxygen transport, 
+      and energy metabolism. Critical for red blood cell formation.
+    benefits:
+      - Essential for hemoglobin and oxygen transport
+      - Supports energy production and reduces fatigue
+      - Boosts immune system function
+      - Supports cognitive function and concentration
+      - Important for healthy pregnancy
+      - Regulates body temperature
+    deficiency_symptoms:
+      - Extreme fatigue and weakness
+      - Pale skin and brittle nails
+      - Shortness of breath
+      - Dizziness and lightheadedness
+      - Cold hands and feet
+      - Difficulty concentrating and poor memory
+      - Frequent infections
+      - Restless leg syndrome
+      - Cravings for non-food items (pica)
+    sources:
+      - Red meat (beef, lamb)
+      - Organ meats (liver, kidney)
+      - Poultry and fish
+      - Beans and lentils
+      - Dark leafy greens (spinach, kale)
+      - Fortified cereals and bread
+      - Tofu and soybeans
+      - Pumpkin seeds and quinoa
+    reference_range: "60-170 μg/dL (men), 50-150 μg/dL (women)"
+    optimal_range: "80-130 μg/dL"
+    daily_requirement: "8 mg (men), 18 mg (women)"
+    sources_verified:
+      - "WHO Iron Deficiency Guidelines"
+      - "ICMR Iron Requirements"
+      - "NHS Iron Information"
+
+  - id: vitamin-b9
+    name: "Vitamin B9 (Folate/Folic Acid)"
+    category: vitamin
+    description: >
+      Essential B vitamin crucial for DNA synthesis, cell division, and red blood cell formation. 
+      Critical during pregnancy for fetal development.
+    benefits:
+      - Essential for DNA synthesis and cell division
+      - Supports red blood cell formation
+      - Critical for fetal neural tube development
+      - May reduce homocysteine levels (heart health)
+      - Supports mental health and mood
+      - May help prevent certain birth defects
+    deficiency_symptoms:
+      - Fatigue and weakness
+      - Pale skin
+      - Irritability and mood changes
+      - Mouth sores and swollen tongue
+      - Growth problems
+      - Neural tube defects in pregnancy
+    sources:
+      - Leafy green vegetables (spinach, kale)
+      - Legumes (beans, lentils, peas)
+      - Asparagus and broccoli
+      - Citrus fruits
+      - Fortified cereals and grains
+      - Nuts and seeds
+      - Eggs
+    reference_range: "2.7-17.0 ng/mL"
+    daily_requirement: "400 mcg (600 mcg during pregnancy)"
+    sources_verified:
+      - "WHO Folate Guidelines"
+      - "ICMR Nutrient Standards"
+
+  - id: calcium
+    name: "Calcium (Serum Calcium)"
+    category: mineral
+    description: >
+      Most abundant mineral in the body, essential for bone health, muscle function, 
+      nerve signaling, and blood clotting.
+    benefits:
+      - Builds and maintains strong bones and teeth
+      - Supports muscle function and contraction
+      - Essential for nerve signal transmission
+      - Required for blood clotting
+      - Regulates heart rhythm
+      - May help prevent osteoporosis
+    deficiency_symptoms:
+      - Muscle cramps and spasms
+      - Numbness and tingling in fingers
+      - Brittle nails
+      - Bone pain and fractures
+      - Osteoporosis in long-term deficiency
+      - Dental problems
+    sources:
+      - Dairy products (milk, cheese, yogurt)
+      - Fortified plant-based milk
+      - Leafy greens (collard greens, bok choy)
+      - Sardines and salmon with bones
+      - Tofu (calcium-set)
+      - Almonds and sesame seeds
+    reference_range: "8.5-10.5 mg/dL"
+    daily_requirement: "1000-1200 mg for adults"
+    sources_verified:
+      - "WHO Calcium Guidelines"
+      - "ICMR RDA 2020"
+      - "NHS Calcium Information"
+
+  - id: magnesium
+    name: "Magnesium"
+    category: mineral
+    description: >
+      Essential mineral involved in over 300 biochemical reactions, supporting muscle and nerve function, 
+      energy production, and bone health.
+    benefits:
+      - Supports muscle and nerve function
+      - Regulates blood sugar and blood pressure
+      - Supports bone health
+      - Important for energy production
+      - May improve sleep quality
+      - Helps reduce anxiety and stress
+    deficiency_symptoms:
+      - Muscle cramps and twitches
+      - Fatigue and weakness
+      - Numbness and tingling
+      - Poor appetite
+      - Irregular heartbeat
+      - Anxiety and restlessness
+    sources:
+      - Nuts and seeds (almonds, cashews, pumpkin seeds)
+      - Whole grains
+      - Leafy green vegetables
+      - Legumes
+      - Dark chocolate
+      - Avocados
+    reference_range: "1.7-2.2 mg/dL"
+    daily_requirement: "310-420 mg for adults"
+    sources_verified:
+      - "WHO Guidelines"
+      - "ICMR Standards"
+
+disclaimer: >
+  This information is for educational purposes only and is based on verified sources 
+  including WHO, ICMR, NHS, and Mayo Clinic. It should not be used for self-diagnosis 
+  or treatment. Always consult qualified healthcare professionals for personalized 
+  medical advice, diagnosis, or treatment.
+
+last_updated: "2026-01-12"
+version: "1.0"
